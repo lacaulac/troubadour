@@ -1,0 +1,7 @@
+module.exports = {
+    PLAYLISTS: 0,
+    EPISODES: 1,
+    ADDNEWPLAYLIST: 2,
+    ADDNEWEPISODE: 3,
+    LISTENTOEPISODE: 4
+};

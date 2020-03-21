@@ -1,0 +1,26 @@
+{
+  "name": "troubadour",
+  "version": "1.0.0",
+  "description": "Listen to your audio series, podcasts and audiobooks easily!",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nw ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lacaulac/troubadour.git"
+  },
+  "author": "lacaulac",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/lacaulac/troubadour/issues"
+  },
+  "homepage": "https://github.com/lacaulac/troubadour#readme",
+  "dependencies": {
+    "bulma": "^0.8.0",
+    "lowdb": "^1.0.0",
+    "nw-dev": "^3.0.1",
+    "vue": "^2.6.11"
+  }
+}

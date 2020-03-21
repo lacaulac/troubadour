@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Troubadour</title>
+        <link rel="stylesheet" href="node_modules/bulma/css/bulma.min.css">
+        <!-- <link rel="stylesheet" type="text/css" href="https://unpkg.com/bulma-prefers-dark" /> -->
+        <style>
+            body {
+                user-select: none;
+            }
+        </style>
+    </head>
+    <body onbeforeunload="dbfuncs.save()">
+        <section class="section">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-one-quarter">
+                        <h1 class="subtitle">Menu</h1>
+                        <aside class="menu" id="menu">
+                            <button class="button" onclick="document.location.reload()">Restart</button>
+                            <span v-if="state.UIState != UIStates.PLAYLISTS">
+                                <button class="button" onclick="goBack()">Go back</button>
+                            </span>
+                            <span v-if="state.UIState == UIStates.PLAYLISTS">
+                                <p class="menu-label">Series</p>
+                                <ul class="menu-list">
+                                    <li><a onclick="backToPlaylists()">Series list</a></li>
+                                    <li><a onclick="gotoLastListen()">Last listen</a></li>
+                                    <li><a onclick="addNewSeries()">Add a new series</a></li>
+                                </ul>
+                            </span>
+                            <span v-if="state.UIState == UIStates.EPISODES">
+                                <p class="menu-label">Episodes</p>
+                                <ul class="menu-list">
+                                    <li><a>Edit episode list</a></li>
+                                    <li><a onclick="addNewEpisode()">Add a new episode</a></li>
+                                    <li><a>Reset progression</a></li>
+                                </ul>
+                            </span>
+                            <p class="menu-label">Database</p>
+                            <ul class="menu-list">
+                                <li><a onclick="dbfuncs.save()">Save database</a></li>
+                                <li><a onclick="dbfuncs.load()">Load database</a></li>
+                            </ul>
+                        </aside>
+                    </div>
+                    <div class="column">
+                        <h1 class="title is-big" id="app">Troubadour <span class="tag is-info">Alpha</span></h1>
+                        <div id="playlistList" v-if="state.UIState == UIStates.PLAYLISTS">
+                            <h2 class="subtitle">Series</h2>
+                            <table class="table is-hoverable is-striped is-fullwidth">
+                                <tr class="thead"><span><td>Name</td><td>Episodes</td></span></tr>
+                                <tr v-on:click="onPlaylistClick($event, index)" v-for="(playlist, index) in state.playlists"><td>{{playlist.name}}</td><td>{{playlist.audioFiles.length}}</td></tr>
+                            </table>
+                        </div>
+                        <div id="episodeList" v-if="state.UIState == UIStates.EPISODES">
+                            <h2 class="subtitle">Episodes - {{state.playlists[state.currentPlaylistId].name}}</h2>
+                            <table class="table is-hoverable is-striped is-fullwidth">
+                                <tr v-on:click="onPlaylistClick($event, index)" v-for="(episode, index) in state.episodes"><td>Episode {{index + 1}}</td><td>{{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}</td></tr>
+                            </table>
+                        </div>
+                        <div id="listen" v-if="state.UIState == UIStates.LISTENTOEPISODE && state.currentEpisode != null">
+                            <h2 class="subtitle">Playing: {{state.playlists[state.currentPlaylistId].name}} - Episode {{state.currentEpisodeId + 1}}</h2>
+                            <audio controls v-bind:src="state.currentEpisode.path" onload="alert('hey')"></audio>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="node_modules/vue/dist/vue.min.js"></script>
+        <script src="index.js"></script>
+        <!--<script src="node_modules/nw-dev/lib/dev.js"></script>-->
+        <script>
+
+        </script>
+    </body>
+</html>
