@@ -71,6 +71,9 @@ var episodeVue = new Vue({
             this.state.currentEpisodeId = index;
             this.state.currentEpisode = this.state.playlists[this.state.currentPlaylistId].audioFiles[index];
             setTimeout(loadAudio, 500);
+        },
+        deleteEpisode: function(event, index) {
+            
         }
     }
 });

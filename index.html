@@ -9,17 +9,16 @@
                 user-select: none;
             }
         </style>
+        <script src="node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
     </head>
     <body onbeforeunload="dbfuncs.save()">
         <section class="section">
             <div class="container">
                 <div class="columns">
                     <div class="column is-one-quarter">
-                        <h1 class="subtitle">Menu</h1>
                         <aside class="menu" id="menu">
-                            <button class="button" onclick="document.location.reload()">Restart</button>
                             <span v-if="state.UIState != UIStates.PLAYLISTS">
-                                <button class="button" onclick="goBack()">Go back</button>
+                                <a class="icon" onclick="goBack()"><i class="fas fa-arrow-left"></i><h2 style="padding-left: 0.5em;">Back</h2></a>
                             </span>
                             <span v-if="state.UIState == UIStates.PLAYLISTS">
                                 <p class="menu-label">Series</p>
@@ -32,7 +31,7 @@
                             <span v-if="state.UIState == UIStates.EPISODES">
                                 <p class="menu-label">Episodes</p>
                                 <ul class="menu-list">
-                                    <li><a>Edit episode list</a></li>
+                                    <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit episode list</a></li>
                                     <li><a onclick="addNewEpisode()">Add a new episode</a></li>
                                     <li><a>Reset progression</a></li>
                                 </ul>
@@ -41,6 +40,10 @@
                             <ul class="menu-list">
                                 <li><a onclick="dbfuncs.save()">Save database</a></li>
                                 <li><a onclick="dbfuncs.load()">Load database</a></li>
+                            </ul>
+                            <p class="menu-label">Alpha</p>
+                            <ul class="menu-list">
+                                <li><a onclick="document.location.reload()">Reload</a></li>
                             </ul>
                         </aside>
                     </div>
@@ -56,7 +59,7 @@
                         <div id="episodeList" v-if="state.UIState == UIStates.EPISODES">
                             <h2 class="subtitle">Episodes - {{state.playlists[state.currentPlaylistId].name}}</h2>
                             <table class="table is-hoverable is-striped is-fullwidth">
-                                <tr v-on:click="onPlaylistClick($event, index)" v-for="(episode, index) in state.episodes"><td>Episode {{index + 1}}</td><td>{{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}</td></tr>
+                                <tr v-on:click="onPlaylistClick($event, index)" v-for="(episode, index) in state.episodes"><td>Episode {{index + 1}}</td><td>{{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}</td><td v-if="state.isEditing"><a class="delete" v-on:click="deleteEpisode($event, index)"></a></td></tr>
                             </table>
                         </div>
                         <div id="listen" v-if="state.UIState == UIStates.LISTENTOEPISODE && state.currentEpisode != null">
