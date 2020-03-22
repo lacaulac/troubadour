@@ -249,12 +249,20 @@ function importFromPlaylistFile() {
         return;
     let i = 0;
     let content = removeWindowsLineReturn(fs.readFileSync(path, "utf-8")).split('\n');
+    let isM3U = content[0] == "#EXTM3U"; //Is the imported file a M3U8 file?
+    let tmpName = "";
     content.forEach(line => {
-        if(line.indexOf("#") == -1 && line != "") {
+        if(line.indexOf("#EXTINF:") != -1)
+        {
+            let arr = line.split(",");
+            arr.splice(0, 1);
+            tmpName = arr.join(",");
+        }
+        else if(line != "" && line.indexOf("#") == -1) {
             ApplicationState.episodes.push({
                 path: line,
                 seconds: 0,
-                name: `Episode ${++i}`,
+                name: isM3U?tmpName:`Episode ${++i}`,
                 isCompleted: false
             });
         }
@@ -269,7 +277,7 @@ function exportToPlaylistFile() {
         return;
     let buffer = `#EXTM3U\n#PLAYLIST:${ApplicationState.playlists[ApplicationState.currentPlaylistId].name}\n\n`;
     ApplicationState.episodes.forEach(ep => {
-        buffer += ep.path + "\n";
+        buffer += `#EXTINF:420,${ep.name}\n` + ep.path + "\n";
     });
     fs.writeFileSync(path, buffer, "utf8");
 }

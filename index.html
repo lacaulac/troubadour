@@ -111,7 +111,7 @@
                         </div>
                         <div id="listen" v-if="state.UIState == UIStates.LISTENTOEPISODE && state.currentEpisode != null">
                             <h2 class="subtitle">
-                                Playing: {{state.playlists[state.currentPlaylistId].name}} - Episode {{state.currentEpisodeId + 1}}
+                                Playing: {{state.playlists[state.currentPlaylistId].name}} - {{state.currentEpisode.name}}
                             </h2>
                             <audio controls v-bind:src="state.currentEpisode.path"></audio>
                         </div>
