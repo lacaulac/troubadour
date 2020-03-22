@@ -1,6 +1,7 @@
 const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 var UIStates = require('./UIStates');
+const fs = require('fs');
 
 const adapter = new FileSync("db.json");
 const db = new lowdb(adapter);
@@ -166,4 +167,34 @@ function gotoLastListen() {
     ApplicationState.episodes = ApplicationState.playlists[ApplicationState.currentPlaylistId].audioFiles;
     ApplicationState.UIState = UIStates.LISTENTOEPISODE;
     setTimeout(loadAudio, 500);
+}
+
+function importFromPlaylistFile() {
+    let path = prompt("Enter path to playlist file:");
+    if(path == null)
+        return;
+    let i = 0;
+    let content = fs.readFileSync(path, "utf-8").split('\n');
+    content.forEach(line => {
+        if(line.indexOf("#") == -1) {
+            ApplicationState.episodes.push({
+                path: line,
+                seconds: 0,
+                name: `Episode ${++i}`
+            });
+        }
+    });
+    dbfuncs.save();
+    ApplicationState.UIState = UIStates.EPISODES;
+}
+
+function exportToPlaylistFile() {
+    let path = prompt("Enter path to playlist file:");
+    if(path == null)
+        return;
+    let buffer = `#EXTM3U\n#PLAYLIST:${ApplicationState.playlists[ApplicationState.currentPlaylistId].name}\n\n`;
+    ApplicationState.episodes.forEach(ep => {
+        buffer += ep.path + "\n";
+    });
+    fs.writeFileSync(path, buffer, "utf8");
 }
