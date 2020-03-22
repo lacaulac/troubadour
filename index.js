@@ -118,6 +118,10 @@ function addNewEpisode() {
     });
 }
 
+function removeWindowsLineReturn(str) {
+    return str.split("\r").join("");
+}
+
 function loadAudio() {
     ApplicationState.isPlayingEpisode = true;
     let audioClip = document.getElementsByTagName("audio")[0];
@@ -175,8 +179,9 @@ function importFromPlaylistFile() {
         return;
     let i = 0;
     let content = fs.readFileSync(path, "utf-8").split('\n');
+    content = removeWindowsLineReturn(content);
     content.forEach(line => {
-        if(line.indexOf("#") == -1) {
+        if(line.indexOf("#") == -1 && line != "") {
             ApplicationState.episodes.push({
                 path: line,
                 seconds: 0,
