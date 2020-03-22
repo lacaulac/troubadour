@@ -18,13 +18,14 @@
                     <div class="column is-one-quarter">
                         <aside class="menu" id="menu">
                             <span v-if="state.UIState != UIStates.PLAYLISTS">
-                                <a class="icon" onclick="goBack()"><i class="fas fa-arrow-left"></i><h2 style="padding-left: 0.5em;">Back</h2></a><br>
+                                <a class="icon" onclick="goBack()"><i class="fas fa-arrow-left"></i><h2 style="padding-left: 0.5em;">Back</h2></a><br><br>
                             </span>
                             <span v-if="state.UIState == UIStates.PLAYLISTS">
                                 <p class="menu-label">Series</p>
                                 <ul class="menu-list">
                                     <li><a onclick="gotoLastListen()">Last listen</a></li>
                                     <li><a onclick="addNewSeries()">Add a new series</a></li>
+                                    <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit series list</a></li>
                                 </ul>
                             </span>
                             <span v-if="state.UIState == UIStates.EPISODES">
@@ -37,13 +38,15 @@
                                     <li><a onclick="exportToPlaylistFile()">Export playlist to file</a></li>
                                 </ul>
                             </span>
-                            <p class="menu-label">Database</p>
+                            <p class="menu-label">General (Not working ATM)</p>
                             <ul class="menu-list">
-                                <li><a onclick="dbfuncs.save()">Save database</a></li>
-                                <li><a onclick="dbfuncs.load()">Load database</a></li>
+                                <li><a>Settings</a></li>
+                                <li><a>About</a></li>
                             </ul>
                             <p class="menu-label">Alpha</p>
                             <ul class="menu-list">
+                                <li><a onclick="dbfuncs.save()">Save database</a></li>
+                                <li><a onclick="dbfuncs.load()">Load database</a></li>
                                 <li><a onclick="document.location.reload()">Reload</a></li>
                             </ul>
                         </aside>
@@ -53,19 +56,62 @@
                         <div id="playlistList" v-if="state.UIState == UIStates.PLAYLISTS">
                             <h2 class="subtitle">Series</h2>
                             <table class="table is-hoverable is-striped is-fullwidth">
-                                <tr class="thead"><span><td>Name</td><td>Episodes</td></span></tr>
-                                <tr v-on:click="onPlaylistClick($event, index)" v-for="(playlist, index) in state.playlists"><td>{{playlist.name}}</td><td>{{playlist.audioFiles.length}}</td></tr>
+                                <tr class="thead">
+                                    <span>
+                                        <td>Name</td>
+                                        <td>Episodes</td>
+                                    </span>
+                                </tr>
+                                <tr v-for="(playlist, index) in state.playlists">
+                                    <td v-on:click="onPlaylistClick($event, index)">
+                                        {{playlist.name}}
+                                    </td>
+                                    <td>
+                                        {{playlist.audioFiles.length}}
+                                    </td>
+                                    <td v-if="state.isEditing">
+                                        <a class="delete" v-on:click="deletePlaylist($event, index)"></a>
+                                        <a class="icon" v-on:click="editPlaylistName($event, index)"><i class="fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                         <div id="episodeList" v-if="state.UIState == UIStates.EPISODES">
                             <h2 class="subtitle">Episodes - {{state.playlists[state.currentPlaylistId].name}}</h2>
                             <table class="table is-hoverable is-striped is-fullwidth">
-                                <tr v-for="(episode, index) in state.episodes"><td v-on:click="onPlaylistClick($event, index)">Episode {{index + 1}}</td><td>{{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}</td><td v-if="state.isEditing"><a class="delete" v-on:click="deleteEpisode($event, index)"></a></td></tr>
+                                <tr v-for="(episode, index) in state.episodes">
+                                    <td v-on:click="onPlaylistClick($event, index)">
+                                        {{state.episodes[index].name}}
+                                    </td>
+                                    <td>
+                                        {{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}
+                                    </td>
+                                    <td>
+                                        <span class="icon has-text-success" v-if="state.episodes[index].isCompleted">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span class="icon has-text-info" v-if="!state.episodes[index].isCompleted">
+                                            <i class="fas fa-dragon"></i>
+                                        </span>
+                                    </td>
+                                    <td v-if="state.isEditing">
+                                        <a class="delete" v-on:click="deleteEpisode($event, index)"></a>
+                                        <a class="icon" v-on:click="editEpisodeName($event, index)"><i class="fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                         <div id="listen" v-if="state.UIState == UIStates.LISTENTOEPISODE && state.currentEpisode != null">
-                            <h2 class="subtitle">Playing: {{state.playlists[state.currentPlaylistId].name}} - Episode {{state.currentEpisodeId + 1}}</h2>
-                            <audio controls v-bind:src="state.currentEpisode.path" onload="alert('hey')"></audio>
+                            <h2 class="subtitle">
+                                Playing: {{state.playlists[state.currentPlaylistId].name}} - Episode {{state.currentEpisodeId + 1}}
+                            </h2>
+                            <audio controls v-bind:src="state.currentEpisode.path"></audio>
+                        </div>
+                        <div id="settings" v-if="state.UIState == UIStates.SETTINGS">
+                            <h2 class="subtitle">Settings</h2>
+                        </div>
+                        <div id="about" v-if="state.UIState == UIStates.ABOUT">
+                            <h2 class="subtitle">About</h2>
                         </div>
                     </div>
                 </div>
@@ -73,6 +119,7 @@
         </section>
         <script src="scripts/timeutils.js"></script>
         <script src="node_modules/vue/dist/vue.min.js"></script>
+
         <script src="index.js"></script>
         <!--<script src="node_modules/nw-dev/lib/dev.js"></script>-->
         <script>

@@ -56,6 +56,19 @@ var playlistVue = new Vue({
             this.state.UIState = UIStates.EPISODES;
             this.state.currentPlaylistId = index;
             this.state.episodes = this.state.playlists[this.state.currentPlaylistId].audioFiles;
+        },
+        deletePlaylist: function(event, index) {
+            if(confirm(`Are you sure you wanna delete "${this.state.playlists[index].name}" ?`))
+                this.state.playlists.splice(index, 1);
+        },
+        editPlaylistName: function(event, index) {
+            let newName = prompt("New name:", this.state.playlists[index].name);
+            if(newName != null)
+            {
+                this.state.playlists[index].name = newName;
+                dbfuncs.save();
+                this.state.isEditing = true;
+            }
         }
     }
 });
@@ -77,6 +90,16 @@ var episodeVue = new Vue({
         deleteEpisode: function(event, index) {
             if(confirm(`Are you sure you wanna remove Episode ${index + 1}?`))
                 this.state.playlists[this.state.currentPlaylistId].audioFiles.splice(index, 1);
+        },
+        editEpisodeName: function(event, index) {
+            let newName = prompt("New name:", this.state.playlists[this.state.currentPlaylistId].audioFiles[index].name);
+            if(newName != null)
+            {
+                this.state.playlists[this.state.currentPlaylistId].audioFiles[index].name = newName;
+                dbfuncs.save();
+                this.state.isEditing = true;
+                this.state.UIState = UIStates.EPISODES;
+            }
         }
     }
 });
@@ -94,6 +117,32 @@ var menuVue = new Vue({
     el: "#menu",
     data: {
         state: ApplicationState
+    }
+});
+
+//Creating the listening view
+var settingsVue = new Vue({
+    el: "#settings",
+    data: {
+        state: ApplicationState
+    },
+    methods: {
+        clickOnButton: function() {
+            this.state.UIState = UIStates.SETTINGS;
+        }
+    }
+});
+
+//Creating the about view
+var aboutVue = new Vue({
+    el: "#about",
+    data: {
+        state: ApplicationState
+    },
+    methods: {
+        clickOnButton: function() {
+            this.state.UIState = UIStates.ABOUT;
+        }
     }
 });
 
@@ -122,12 +171,17 @@ function removeWindowsLineReturn(str) {
     return str.split("\r").join("");
 }
 
+function onAudioEnd() {
+    ApplicationState.currentEpisode.isCompleted = true;
+}
+
 function loadAudio() {
     ApplicationState.isPlayingEpisode = true;
     let audioClip = document.getElementsByTagName("audio")[0];
     //audioClip.src = ApplicationState.currentEpisode.path;
     audioClip.currentTime = ApplicationState.currentEpisode.seconds;
     audioClip.volume = ApplicationState.playVolume;
+    audioClip.onended = onAudioEnd;
     //audioClip.play();
 }
 
@@ -143,12 +197,13 @@ function pauseAudio() {
 function goBack() {
     switch(ApplicationState.UIState)
     {
+        case UIStates.SETTINGS:
+        case UIStates.ABOUT:
         case UIStates.EPISODES:
             ApplicationState.UIState = UIStates.PLAYLISTS;
             dbfuncs.save();
             break;
         case UIStates.LISTENTOEPISODE:
-            console.log("Gonig back from episode playing");
             pauseAudio();
             ApplicationState.UIState = UIStates.EPISODES;
             break;
@@ -162,6 +217,7 @@ function resetSeriesProgression() {
     for(let i=0; i<au.length; i++)
     {
         au[i].seconds = 0;
+        au[i].isCompleted = false;
     }
     dbfuncs.save();
     ApplicationState.UIState = UIStates.EPISODES;
@@ -178,14 +234,14 @@ function importFromPlaylistFile() {
     if(path == null)
         return;
     let i = 0;
-    let content = fs.readFileSync(path, "utf-8").split('\n');
-    content = removeWindowsLineReturn(content);
+    let content = removeWindowsLineReturn(fs.readFileSync(path, "utf-8")).split('\n');
     content.forEach(line => {
         if(line.indexOf("#") == -1 && line != "") {
             ApplicationState.episodes.push({
                 path: line,
                 seconds: 0,
-                name: `Episode ${++i}`
+                name: `Episode ${++i}`,
+                isCompleted: false
             });
         }
     });

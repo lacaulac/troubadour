@@ -3,5 +3,7 @@ module.exports = {
     EPISODES: 1,
     ADDNEWPLAYLIST: 2,
     ADDNEWEPISODE: 3,
-    LISTENTOEPISODE: 4
+    LISTENTOEPISODE: 4,
+    SETTINGS: 5,
+    ABOUT: 6
 };

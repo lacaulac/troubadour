@@ -21,7 +21,6 @@
     "@fortawesome/fontawesome-free": "^5.12.1",
     "bulma": "^0.8.0",
     "lowdb": "^1.0.0",
-    "nw-dev": "^3.0.1",
     "vue": "^2.6.11"
   }
 }
