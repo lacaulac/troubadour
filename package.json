@@ -19,6 +19,7 @@
   "homepage": "https://github.com/lacaulac/troubadour#readme",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
+    "appdata-path": "^1.0.0",
     "bulma": "^0.8.0",
     "lowdb": "^1.0.0",
     "vue": "^2.6.11"

@@ -2,8 +2,10 @@ const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 var UIStates = require('./UIStates');
 const fs = require('fs');
+const path = require('path');
+const getAppDataPath = require('appdata-path');
 
-const adapter = new FileSync("db.json");
+const adapter = new FileSync(path.join(getAppDataPath.getAppDataPath(), "troubadour.db"));
 const db = new lowdb(adapter);
 
 //Setting application state
