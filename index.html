@@ -18,7 +18,7 @@
                     <div class="column is-one-quarter">
                         <aside class="menu" id="menu">
                             <span v-if="state.UIState != UIStates.PLAYLISTS">
-                                <a class="icon" onclick="goBack()"><i class="fas fa-arrow-left"></i><h2 style="padding-left: 0.5em;">Back</h2></a>
+                                <a class="icon" onclick="goBack()"><i class="fas fa-arrow-left"></i><h2 style="padding-left: 0.5em;">Back</h2></a><br>
                             </span>
                             <span v-if="state.UIState == UIStates.PLAYLISTS">
                                 <p class="menu-label">Series</p>
@@ -33,7 +33,7 @@
                                 <ul class="menu-list">
                                     <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit episode list</a></li>
                                     <li><a onclick="addNewEpisode()">Add a new episode</a></li>
-                                    <li><a>Reset progression</a></li>
+                                    <li><a onclick="resetSeriesProgression()">Reset progression</a></li>
                                 </ul>
                             </span>
                             <p class="menu-label">Database</p>
@@ -59,7 +59,7 @@
                         <div id="episodeList" v-if="state.UIState == UIStates.EPISODES">
                             <h2 class="subtitle">Episodes - {{state.playlists[state.currentPlaylistId].name}}</h2>
                             <table class="table is-hoverable is-striped is-fullwidth">
-                                <tr v-on:click="onPlaylistClick($event, index)" v-for="(episode, index) in state.episodes"><td>Episode {{index + 1}}</td><td>{{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}</td><td v-if="state.isEditing"><a class="delete" v-on:click="deleteEpisode($event, index)"></a></td></tr>
+                                <tr v-for="(episode, index) in state.episodes"><td v-on:click="onPlaylistClick($event, index)">Episode {{index + 1}}</td><td>{{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}</td><td v-if="state.isEditing"><a class="delete" v-on:click="deleteEpisode($event, index)"></a></td></tr>
                             </table>
                         </div>
                         <div id="listen" v-if="state.UIState == UIStates.LISTENTOEPISODE && state.currentEpisode != null">
@@ -70,6 +70,7 @@
                 </div>
             </div>
         </section>
+        <script src="scripts/timeutils.js"></script>
         <script src="node_modules/vue/dist/vue.min.js"></script>
         <script src="index.js"></script>
         <!--<script src="node_modules/nw-dev/lib/dev.js"></script>-->

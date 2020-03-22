@@ -32,6 +32,7 @@ const dbfuncs = {
         let arr = ApplicationState.episodes;
         ApplicationState.episodes = [];
         ApplicationState.UIState = UIStates.PLAYLISTS;
+        ApplicationState.isEditing = false;
         db.update('state', ApplicationState).write();
         ApplicationState.episodes = arr;
     },
@@ -73,7 +74,8 @@ var episodeVue = new Vue({
             setTimeout(loadAudio, 500);
         },
         deleteEpisode: function(event, index) {
-            
+            if(confirm(`Are you sure you wanna remove Episode ${index + 1}?`))
+                this.state.playlists[this.state.currentPlaylistId].audioFiles.splice(index, 1);
         }
     }
 });
@@ -97,6 +99,8 @@ var menuVue = new Vue({
 //Development function to test adding a new playlist
 function addNewSeries() {
     let plName = prompt("Playlist name:");
+    if(plName == null)
+        return;
     ApplicationState.playlists.push({
         name: plName,
         audioFiles: []
@@ -105,6 +109,8 @@ function addNewSeries() {
 
 function addNewEpisode() {
     let path = prompt("Path to episode:");
+    if(path == null)
+        return;
     ApplicationState.episodes.push({
         path: path,
         seconds: 0
@@ -129,16 +135,12 @@ function pauseAudio() {
     dbfuncs.save();
 }
 
-//Definitely not a debug function
-function backToPlaylists() {
-    ApplicationState.UIState = UIStates.PLAYLISTS;
-}
-
 function goBack() {
     switch(ApplicationState.UIState)
     {
         case UIStates.EPISODES:
             ApplicationState.UIState = UIStates.PLAYLISTS;
+            dbfuncs.save();
             break;
         case UIStates.LISTENTOEPISODE:
             console.log("Gonig back from episode playing");
@@ -148,15 +150,16 @@ function goBack() {
     }
 }
 
-const TimeUtils = {
-    getMinutes: function(secs) {
-        let s = Math.round(secs);
-        return (s - (s%60))/60;
-    },
-    getSeconds: function(secs) {
-        let s = Math.round(secs);
-        return s % 60;
+function resetSeriesProgression() {
+    if(!confirm("Are you sure you wanna reset your progression in these series?"))
+        return;
+    let au = ApplicationState.playlists[ApplicationState.currentPlaylistId].audioFiles
+    for(let i=0; i<au.length; i++)
+    {
+        au[i].seconds = 0;
     }
+    dbfuncs.save();
+    ApplicationState.UIState = UIStates.EPISODES;
 }
 
 function gotoLastListen() {
