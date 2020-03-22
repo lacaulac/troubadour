@@ -14,6 +14,7 @@ var episodes = [];
 //TODO Move the playlists and episodes into the ApplicationState
 var ApplicationState = {
     UIState: UIStates.PLAYLISTS,
+    UISettingsOn: false,
     currentPlaylistId: 0,
     currentEpisodeId: 0,
     playlists: playlists,
@@ -21,7 +22,9 @@ var ApplicationState = {
     isEditing: false,
     currentEpisode: null,
     isPlayingEpisode: false,
-    playVolume: 1.0
+    playVolume: 1.0,
+    shouldAutoPlay: false,
+    darkMode: true
 };
 
 //Setting default database content
@@ -36,6 +39,7 @@ const dbfuncs = {
         ApplicationState.episodes = [];
         ApplicationState.UIState = UIStates.PLAYLISTS;
         ApplicationState.isEditing = false;
+        ApplicationState.UISettingsOn = false;
         db.update('state', ApplicationState).write();
         ApplicationState.episodes = arr;
     },
@@ -122,16 +126,11 @@ var menuVue = new Vue({
     }
 });
 
-//Creating the listening view
+//Creating the settings view
 var settingsVue = new Vue({
     el: "#settings",
     data: {
         state: ApplicationState
-    },
-    methods: {
-        clickOnButton: function() {
-            this.state.UIState = UIStates.SETTINGS;
-        }
     }
 });
 
@@ -175,6 +174,19 @@ function removeWindowsLineReturn(str) {
 
 function onAudioEnd() {
     ApplicationState.currentEpisode.isCompleted = true;
+    if(ApplicationState.shouldAutoPlay && (ApplicationState.currentEpisodeId + 1 < ApplicationState.episodes.length))
+    {
+        ApplicationState.UIState = UIStates.LISTENTOEPISODE;
+        ApplicationState.currentEpisodeId = ApplicationState.currentEpisodeId + 1;
+        ApplicationState.currentEpisode = ApplicationState.playlists[ApplicationState.currentPlaylistId].audioFiles[ApplicationState.currentEpisodeId];
+        setTimeout(() => {
+            let audioClip = document.getElementsByTagName("audio")[0];
+            loadAudio();
+            audioClip.oncanplay = function() {
+                audioClip.play();
+            }
+        })
+    }
 }
 
 function loadAudio() {

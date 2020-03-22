@@ -3,7 +3,7 @@
     <head>
         <title>Troubadour</title>
         <link rel="stylesheet" href="node_modules/bulma/css/bulma.min.css">
-        <!-- <link rel="stylesheet" type="text/css" href="https://unpkg.com/bulma-prefers-dark" /> -->
+         <link rel="stylesheet" type="text/css" href="https://unpkg.com/bulma-prefers-dark" /> <!-- -->
         <style>
             body {
                 user-select: none;
@@ -40,7 +40,7 @@
                             </span>
                             <p class="menu-label">General (Not working ATM)</p>
                             <ul class="menu-list">
-                                <li><a>Settings</a></li>
+                                <li><a onclick="ApplicationState.SettingsOn = !ApplicationState.SettingsOn">Settings</a></li>
                                 <li><a>About</a></li>
                             </ul>
                             <p class="menu-label">Alpha</p>
@@ -53,6 +53,14 @@
                     </div>
                     <div class="column">
                         <h1 class="title is-big" id="app">Troubadour <span class="tag is-info">Alpha</span></h1>
+                        <div id="settings" v-if="state.SettingsOn">
+                            <h2 class="subtitle">Settings</h2>
+                            <form class="form">
+                                <label for="auto-play">Auto-play: </label>
+                                <input type="checkbox" id="auto-play" v-model="state.shouldAutoPlay">
+                            </form>
+                            <br>
+                        </div>
                         <div id="playlistList" v-if="state.UIState == UIStates.PLAYLISTS">
                             <h2 class="subtitle">Series</h2>
                             <table class="table is-hoverable is-striped is-fullwidth">
@@ -106,9 +114,6 @@
                                 Playing: {{state.playlists[state.currentPlaylistId].name}} - Episode {{state.currentEpisodeId + 1}}
                             </h2>
                             <audio controls v-bind:src="state.currentEpisode.path"></audio>
-                        </div>
-                        <div id="settings" v-if="state.UIState == UIStates.SETTINGS">
-                            <h2 class="subtitle">Settings</h2>
                         </div>
                         <div id="about" v-if="state.UIState == UIStates.ABOUT">
                             <h2 class="subtitle">About</h2>
