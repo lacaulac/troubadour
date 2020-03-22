@@ -7,6 +7,8 @@ Troubadour is an application that allows you to listen to audio series, podcasts
 - Listen to files from your computer or from the Internet
 - Remembers when you stopped
 - Easily get back to your last listen
+- Import and export from M3U8 files!
+    - Kinda limited at the moment, but definitely going to get better
 
 ## What it's made of
 
