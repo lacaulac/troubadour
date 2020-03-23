@@ -75,6 +75,17 @@ var playlistVue = new Vue({
                 dbfuncs.save();
                 this.state.isEditing = true;
             }
+        },
+        isPlaylistCompleted: function(index) {
+            let pl = this.state.playlists[index];
+            let isCompleted = true;
+            pl.audioFiles.forEach(e => {
+                if(!e.isCompleted)
+                {
+                    isCompleted = false;
+                }
+            });
+            return isCompleted;
         }
     }
 });

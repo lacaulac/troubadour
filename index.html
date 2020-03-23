@@ -43,7 +43,7 @@
                                 <li><a onclick="ApplicationState.SettingsOn = !ApplicationState.SettingsOn">Settings</a></li>
                                 <li><a>About</a></li>
                             </ul>
-                            <p class="menu-label">Alpha</p>
+                            <p class="menu-label">Beta</p>
                             <ul class="menu-list">
                                 <li><a onclick="dbfuncs.save()">Save database</a></li>
                                 <li><a onclick="dbfuncs.load()">Load database</a></li>
@@ -76,6 +76,10 @@
                                     </td>
                                     <td>
                                         {{playlist.audioFiles.length}}
+                                        
+                                        <span style="text-align: right" class="icon has-text-success" v-if="isPlaylistCompleted(index)">
+                                            <i class="fas fa-check"></i>
+                                        </span>
                                     </td>
                                     <td v-if="state.isEditing">
                                         <a class="delete" v-on:click="deletePlaylist($event, index)"></a>
