@@ -12,7 +12,8 @@ Troubadour is an application that allows you to listen to audio series, podcasts
 
 ## What it's made of
 
-- NW.js for most of it
-- Bulma for the UI
+- NW.js for most of it (https://nwjs.io)
+- Bulma for the UI (https://bulma.io/)
+- Awesome Bulma themes (https://jenil.github.io/bulmaswatch/)
 - A lot of love
 - Way too much time on my hands

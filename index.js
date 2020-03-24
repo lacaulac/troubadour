@@ -8,6 +8,10 @@ const getAppDataPath = require('appdata-path');
 const adapter = new FileSync(path.join(getAppDataPath.getAppDataPath(), "troubadour.db"));
 const db = new lowdb(adapter);
 
+bulmaToast.setDoc(window.document);
+const defaultToastAnimation = { in: 'fadeIn', out: 'fadeOut' };
+
+
 //Setting application state
 var playlists = [];
 var episodes = [];
@@ -24,7 +28,7 @@ var ApplicationState = {
     isPlayingEpisode: false,
     playVolume: 1.0,
     shouldAutoPlay: false,
-    darkMode: true
+    cssFile: "css/default.min.css"
 };
 
 //Setting default database content
@@ -121,6 +125,14 @@ var episodeVue = new Vue({
     }
 });
 
+//Creating the stylesheet "view"
+var stylesheetView = new Vue({
+    el: "#stylesheet",
+    data: {
+        state: ApplicationState
+    }
+});
+
 //Creating the listening view
 var episodeVue = new Vue({
     el: "#listen",
@@ -141,22 +153,20 @@ var menuVue = new Vue({
 var settingsVue = new Vue({
     el: "#settings",
     data: {
-        state: ApplicationState
+        state: ApplicationState,
+        cssFiles: [
+            "css/default.min.css",
+            "css/cyborg.min.css",
+            "css/darkly.min.css",
+            "css/flatly.min.css",
+            "css/minty.min.css",
+            "css/solar.min.css",
+            "css/superhero.min.css"
+        ]
     }
 });
 
-//Creating the about view
-var aboutVue = new Vue({
-    el: "#about",
-    data: {
-        state: ApplicationState
-    },
-    methods: {
-        clickOnButton: function() {
-            this.state.UIState = UIStates.ABOUT;
-        }
-    }
-});
+
 
 //Development function to test adding a new playlist
 function addNewSeries() {
@@ -167,15 +177,31 @@ function addNewSeries() {
         name: plName,
         audioFiles: []
     });
+    bulmaToast.toast({
+        message: `Added ${name} to the series list`,
+        type: "is-success",
+        animate: defaultToastAnimation
+    });
 }
 
 function addNewEpisode() {
     let path = prompt("Path to episode:");
     if(path == null)
         return;
+    let name = null;
+    while(name == null) {
+        name = prompt("Episode name:");
+    }
     ApplicationState.episodes.push({
         path: path,
-        seconds: 0
+        seconds: 0,
+        name: name,
+        isCompleted: false
+    });
+    bulmaToast.toast({
+        message: `Added ${name} to ${ApplicationState.playlists[ApplicationState.currentPlaylistId].name}`,
+        type: "is-success",
+        animate: defaultToastAnimation
     });
 }
 
@@ -195,6 +221,11 @@ function onAudioEnd() {
             loadAudio();
             audioClip.oncanplay = function() {
                 audioClip.play();
+                bulmaToast.toast({
+                    message: "Playing next episode",
+                    type: "is-info",
+                    animate: defaultToastAnimation
+                });
             }
         })
     }
@@ -237,7 +268,14 @@ function goBack() {
 
 function resetSeriesProgression() {
     if(!confirm("Are you sure you wanna reset your progression in these series?"))
+    {
+        bulmaToast.toast({
+            message: "Canceled action",
+            type: "is-danger",
+            animate: defaultToastAnimation
+        });
         return;
+    }
     let au = ApplicationState.playlists[ApplicationState.currentPlaylistId].audioFiles
     for(let i=0; i<au.length; i++)
     {
@@ -246,23 +284,34 @@ function resetSeriesProgression() {
     }
     dbfuncs.save();
     ApplicationState.UIState = UIStates.EPISODES;
+    bulmaToast.toast({
+        message: "Deleted progression!",
+        type: "is-success",
+        animate: defaultToastAnimation
+    });
 }
 
 function gotoLastListen() {
     ApplicationState.episodes = ApplicationState.playlists[ApplicationState.currentPlaylistId].audioFiles;
     ApplicationState.UIState = UIStates.LISTENTOEPISODE;
     setTimeout(loadAudio, 500);
+    bulmaToast.toast({
+        message: "Resumed listening!",
+        type: "is-success",
+        animate: defaultToastAnimation
+    });
 }
 
 function importFromPlaylistFile() {
     let path = prompt("Enter path to playlist file:");
     if(path == null)
         return;
-    let i = 0;
+    let i = 0, amount=0;
     let content = removeWindowsLineReturn(fs.readFileSync(path, "utf-8")).split('\n');
     let isM3U = content[0] == "#EXTM3U"; //Is the imported file a M3U8 file?
     let tmpName = "";
     content.forEach(line => {
+        amount++;
         if(line.indexOf("#EXTINF:") != -1)
         {
             let arr = line.split(",");
@@ -280,6 +329,11 @@ function importFromPlaylistFile() {
     });
     dbfuncs.save();
     ApplicationState.UIState = UIStates.EPISODES;
+    bulmaToast.toast({
+        message: `Successfully imported ${amount} episodes`,
+        type: "is-success",
+        animate: defaultToastAnimation
+    });
 }
 
 function exportToPlaylistFile() {
@@ -291,4 +345,9 @@ function exportToPlaylistFile() {
         buffer += `#EXTINF:420,${ep.name}\n` + ep.path + "\n";
     });
     fs.writeFileSync(path, buffer, "utf8");
+    bulmaToast.toast({
+        message: `Successfully exported all episodes to ${path}`,
+        type: "is-success",
+        animate: defaultToastAnimation
+    });
 }

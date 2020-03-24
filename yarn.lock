@@ -7,10 +7,20 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.12.1.tgz#2a98fea9fbb8a606ddc79a4680034e9d5591c550"
   integrity sha512-ZtjIIFplxncqxvogq148C3hBLQE+W3iJ8E4UvJ09zIJUgzwLcROsWwFDErVSXY2Plzao5J9KUYNHKHMEUYDMKw==
 
+animate.css@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-3.7.2.tgz#e73e0d50e92cb1cfef1597d9b38a9481020e08ea"
+  integrity sha512-0bE8zYo7C0KvgOYrSVfrzkbYk6IOTVPNqkiHg2cbyF4Pq/PXzilz4BRWA3hwEUBoMp5VBgrC29lQIZyhRWdBTw==
+
 appdata-path@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/appdata-path/-/appdata-path-1.0.0.tgz#c4022d0b6727d1ddc1dd7ecec143d4352f3eefad"
   integrity sha512-ZbH3ezXfnT/YE3NdqduIt4lBV+H0ybvA2Qx3K76gIjQvh8gROpDFdDLpx6B1QJtW7zxisCbpTlCLhKqoR8cDBw==
+
+bulma-toast@^1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/bulma-toast/-/bulma-toast-1.5.4.tgz#ee72a1f49a1da07c49c0507ffa4ade6c1d3026f8"
+  integrity sha512-yLGeupj1WOCgOS6Gtik2eyJ2aA55nFwDyTeLSoTDdRRdWsWbBcMsna3j7ZATiQTZ4o5BI05X4z/qCKc9qMysUA==
 
 bulma@^0.8.0:
   version "0.8.0"
