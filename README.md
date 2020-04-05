@@ -10,6 +10,13 @@ Troubadour is an application that allows you to listen to audio series, podcasts
 - Import and export from M3U8 files!
     - Kinda limited at the moment, but definitely going to get better
 
+## How to use
+There's no binary release available as of yet, so starting it from the source is required.
+You need to have NW.js installed and in your path.
+
+- `npm install` or `yarn`
+- `nw .`
+
 ## What it's made of
 
 - NW.js for most of it (https://nwjs.io)
