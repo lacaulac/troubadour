@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="node_modules/bulma/css/bulma.min.css">
         <link rel="stylesheet" type="text/css" v-bind:href="state.cssFile" id="stylesheet">
         <link rel="stylesheet" type="text/css" href="node_modules/animate.css/animate.min.css">
+        <link rel="stylesheet" type="text/css" href="index.css">
         <style>
             body {
                 user-select: none;
@@ -16,8 +17,29 @@
         <script src="node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
         <script src="node_modules/bulma-toast/dist/bulma-toast.min.js"></script>
     </head>
-    <body onbeforeunload="dbfuncs.save()">
-        <section class="section">
+    <body onbeforeunload="dbfuncs.save()"  style="border-radius: 20px">
+        <header id="titlebar" class="drag-enable section">
+            <div class="columns">
+                <div class="column"></div>
+                <div class="column is-centered subtitle has-text-centered">Troubadour</div>
+                <div class="column has-text-right is-vcentered">
+                    <span class="icon is-medium drag-disable hover-opacity" onclick="document.location.reload()">
+                        <i class="fas fa-redo"></i>
+                    </span>
+                    <span class="icon is-medium drag-disable hover-opacity" onclick="nw.Window.get().minimize()">
+                        <i class="fas fa-window-minimize"></i>
+                    </span>
+                    <span class="icon is-medium drag-disable hover-opacity"  onclick="(nw.Window.get().cWindow.state === 'maximized')?nw.Window.get().unmaximize():nw.Window.get().maximize()">
+                        <i class="fas fa-window-maximize"></i>
+                    </span>
+                    <span class="icon is-medium drag-disable hover-opacity hover-red" onclick="nw.Window.get().close()">
+                        <i class="fas fa-window-close"></i>
+                    </span>
+                </div>
+            </div>
+        </header>
+        <br>
+        <section id="app-content" class="section" style="overflow-y: auto;">
             <div class="container">
                 <div class="columns">
                     <div class="column is-one-fifth">
@@ -65,7 +87,6 @@
                                         <ul class="menu-list">
                                             <li><a onclick="dbfuncs.save()">Save database</a></li>
                                             <li><a onclick="dbfuncs.load()">Load database</a></li>
-                                            <li><a onclick="document.location.reload()">Reload</a></li>
                                         </ul>
                                     </span>
                                 </div>
@@ -165,5 +186,7 @@
         <script>
 
         </script>
+        <input style="display:none;" id="fileOpenDialog" type="file"/>
+        <input style="display:none;" id="fileSaveDialog" type="file" nwsaveas/>
     </body>
 </html>

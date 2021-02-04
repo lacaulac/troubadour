@@ -1,0 +1,47 @@
+.drag-enable {
+    -webkit-app-region: drag;
+}
+
+.drag-disable {
+    -webkit-app-region: no-drag;
+}
+
+#titlebar {
+    padding-top: 5px;
+    padding-bottom: 2.3em;
+    border-bottom: 1px solid rgb(141, 141, 141);
+    height: 2em;
+    display: block;
+    position: fixed;
+    width: 100%;
+    z-index: 7;
+}
+
+#titlebar .subtitle {
+    padding-top: 0.75em;
+}
+
+#app-content {
+    
+}
+
+.hover-opacity {
+    transition-duration: 0.5s;
+}
+
+.hover-opacity:hover {
+    opacity: 70%;
+    transition-duration: 0.5s;
+}
+
+.hover-red:hover {
+    color: rgb(199, 32, 32);
+}
+
+html {
+    overflow: auto;
+}
+
+#episodeList {
+    overflow: auto;
+}

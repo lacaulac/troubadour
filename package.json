@@ -1,11 +1,12 @@
 {
-  "name": "troubadour",
+  "name": "Troubadour",
   "version": "1.0.0",
   "description": "Listen to your audio series, podcasts and audiobooks easily!",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nw ."
+    "start": "nw .",
+    "dist": "build --tasks win-x64 --mirror https://dl.nwjs.io/ ."
   },
   "repository": {
     "type": "git",
@@ -25,5 +26,19 @@
     "bulma-toast": "^1.5.4",
     "lowdb": "^1.0.0",
     "vue": "^2.6.11"
+  },
+  "window": {
+    "icon": "Logo.png",
+    "frame": false,
+    "transparent": true,
+    "min_width": 945,
+    "width": 945,
+    "height": 600
+  },
+  "devDependencies": {
+    "nwjs-builder-phoenix": "^1.15.0"
+  },
+  "build": {
+    "nwVersion": "0.44.5"
   }
 }
