@@ -1,12 +1,12 @@
 {
   "name": "Troubadour",
   "version": "1.0.0",
-  "description": "Listen to your audio series, podcasts and audiobooks easily!",
+  "description": "Troubadour",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nw .",
-    "dist": "build --tasks win-x64 --mirror https://dl.nwjs.io/ ."
+    "dist": "build --tasks win-x64,linux-x64 --mirror https://dl.nwjs.io/ ."
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,13 @@
     "nwjs-builder-phoenix": "^1.15.0"
   },
   "build": {
-    "nwVersion": "0.44.5"
+    "nwVersion": "0.44.5",
+    "packed": true,
+    "targets": ["zip"],
+    "win": {
+      "productName": "Troubadour",
+      "companyName": "Antonin \"lacaulac\" Verdier",
+      "icon": "./icon.ico"
+    }
   }
 }
