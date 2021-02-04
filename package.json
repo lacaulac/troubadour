@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nw .",
-    "dist": "build --tasks win-x64,linux-x64 --mirror https://dl.nwjs.io/ ."
+    "dist": "build --tasks win-x64,linux-x64,mac-x64 --mirror https://dl.nwjs.io/ ."
   },
   "repository": {
     "type": "git",
