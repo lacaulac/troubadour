@@ -62,7 +62,8 @@
                                     <ul class="menu-list">
                                         <li><a onclick="gotoLastListen()">Last listen</a></li>
                                         <li><a onclick="addNewSeries()">Add a new series</a></li>
-                                        <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit series list</a></li>
+                                        <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit
+                                                series list</a></li>
                                     </ul>
                                 </span>
                             </div>
@@ -70,7 +71,8 @@
                                 <span class="fullwidthforrealz">
                                     <p class="menu-label">Episodes</p>
                                     <ul class="menu-list">
-                                        <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit episode list</a></li>
+                                        <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit
+                                                episode list</a></li>
                                         <li><a onclick="addNewEpisodeFromDisk()">Add a new episode from disk</a></li>
                                         <li><a onclick="addNewEpisodeFromURL()">Add a new episode from a URL</a></li>
                                         <li><a onclick="resetSeriesProgression()">Reset progression</a></li>
@@ -110,13 +112,22 @@
                                 class="icon"><i
                                     class="fas fa-chevron-left"></i></span><span>Back</span></button><br><br>
                         <form class="form">
-                            <label for="auto-play">Auto-play: </label>
-                            <input class="checkbox" type="checkbox" id="auto-play" v-model="state.shouldAutoPlay">
-                            <br>
-                            <label for="themes">Theme: </label>
-                            <select class="select" v-model="state.cssFile">
-                                <option v-for="theme in cssFiles" v-bind:value="theme">{{theme}}</option>
-                            </select>
+                            <div class="field">
+                                <label class="label">Auto-play: </label>
+                                <div class="control">
+                                    <input class="checkbox" type="checkbox" id="auto-play" v-model="state.shouldAutoPlay">
+                                </div>
+                                <p class="help">If enabled, Troubadour will play the next file in the playlist after the current one has ended.</p>
+                            </div>
+                            <div class="field">
+                                <label class="label">Theme: </label>
+                                <div class="control">
+                                    <select class="select" v-model="state.cssFile">
+                                        <option v-for="theme in cssFiles" v-bind:value="theme">{{theme}}</option>
+                                    </select>
+                                </div>
+                                <p class="help">Don't like the default look? Use another theme!</p>
+                            </div>
                         </form>
                         <br>
                     </div>
