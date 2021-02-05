@@ -14,6 +14,7 @@ Nevertheless, feel free to submit an issue if you were to encounter a bug, speci
 - Easily get back to your last listen
 - Import and export from M3U8 files!
     - Kinda limited at the moment, but definitely going to get better
+- Supports multiple themes (check out the settings menu!)
 
 ## How to use
 There's no binary release available as of yet, so starting it from the source is required.
