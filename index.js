@@ -39,12 +39,14 @@ db.defaults({
 const dbfuncs = {
     save: function() {
         console.log("Saving the database");
+        let oldState = ApplicationState.UIState;
         let arr = ApplicationState.episodes;
         ApplicationState.episodes = [];
         ApplicationState.UIState = UIStates.PLAYLISTS;
         ApplicationState.isEditing = false;
         ApplicationState.UISettingsOn = false;
         db.update('state', ApplicationState).write();
+        ApplicationState.UIState = oldState;
         ApplicationState.episodes = arr;
     },
     load: function() {
@@ -249,7 +251,7 @@ function onAudioEnd() {
             let audioClip = document.getElementsByTagName("audio")[0];
             loadAudio();
             audioClip.oncanplay = function() {
-                audioClip.play();
+                //audioClip.play();
                 bulmaToast.toast({
                     message: "Playing next episode",
                     type: "is-info",
@@ -268,6 +270,10 @@ function loadAudio() {
     audioClip.currentTime = ApplicationState.currentEpisode.seconds;
     audioClip.volume = ApplicationState.playVolume;
     audioClip.onended = onAudioEnd;
+    audioClip.onpause = pauseAudio;
+    audioClip.oncanplay = () => {
+        audioClip.play();
+    }
     //audioClip.play();
 }
 
