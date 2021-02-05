@@ -255,7 +255,7 @@ function onAudioEnd() {
             let audioClip = document.getElementsByTagName("audio")[0];
             loadAudio();
             audioClip.oncanplay = function() {
-                //audioClip.play();
+                audioClip.play();
                 bulmaToast.toast({
                     message: "Playing next episode",
                     type: "is-info",
