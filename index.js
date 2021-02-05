@@ -306,7 +306,7 @@ function resetSeriesProgression() {
     if(!confirm("Are you sure you wanna reset your progression in these series?"))
     {
         bulmaToast.toast({
-            message: "Canceled action",
+            message: "Cancelled action",
             type: "is-danger",
             animate: defaultToastAnimation,
             position: "bottom-right"
