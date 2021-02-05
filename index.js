@@ -40,6 +40,10 @@ const dbfuncs = {
     save: function() {
         console.log("Saving the database");
         let oldState = ApplicationState.UIState;
+        if(oldState == UIStates.LISTENTOEPISODE) {
+            ApplicationState.currentEpisode.seconds = document.getElementsByTagName("audio")[0].currentTime;
+            ApplicationState.playlists[ApplicationState.currentPlaylistId].audioFiles[ApplicationState.currentEpisodeId].seconds = ApplicationState.currentEpisode.seconds;
+        }
         let arr = ApplicationState.episodes;
         ApplicationState.episodes = [];
         ApplicationState.UIState = UIStates.PLAYLISTS;
@@ -273,6 +277,7 @@ function loadAudio() {
     audioClip.onpause = pauseAudio;
     audioClip.oncanplay = () => {
         audioClip.play();
+        audioClip.saveInterval = setInterval(() => { ApplicationState.currentEpisode.seconds = audioClip.currentTime }, 10000); //Let's make sure progress is "saved" every 10 seconds
     }
     //audioClip.play();
 }
@@ -297,6 +302,10 @@ function goBack() {
             break;
         case UIStates.LISTENTOEPISODE:
             pauseAudio();
+            if(document.getElementsByTagName("audio")[0].saveInterval !== undefined) {
+                clearInterval(document.getElementsByTagName("audio")[0].saveInterval);
+                document.getElementsByTagName("audio")[0].saveInterval = undefined;
+            }
             ApplicationState.UIState = UIStates.EPISODES;
             break;
     }
