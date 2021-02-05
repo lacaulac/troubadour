@@ -185,8 +185,35 @@ function addNewSeries() {
     });
 }
 
-function addNewEpisode() {
-    let path = prompt("Path to episode:");
+function addNewEpisodeFromDisk() {
+    document.querySelector("#fileOpenDialog").click();
+    document.querySelector("#fileOpenDialog").onchange = () => {
+        document.querySelector("#fileOpenDialog").onchange = null;
+        let filePath = document.querySelector("#fileOpenDialog").files[0].path;
+        if(filePath == null)
+            return;
+        let name = filePath.split(path.sep)[filePath.split(path.sep).length-1].split(".").slice(0, -1).join(".");
+        let newName = prompt("Episode name:", name);
+        if(newName == null || newName == undefined)
+            return;
+        name = newName;
+        ApplicationState.episodes.push({
+            path: filePath,
+            seconds: 0,
+            name: name,
+            isCompleted: false
+        });
+        bulmaToast.toast({
+            message: `Added ${name} to ${ApplicationState.playlists[ApplicationState.currentPlaylistId].name}`,
+            type: "is-success",
+            animate: defaultToastAnimation,
+            position: "bottom-right"
+        });
+    }
+}
+
+function addNewEpisodeFromURL() {
+    let path = prompt("Episode URL:");
     if(path == null)
         return;
     let name = null;

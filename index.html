@@ -1,191 +1,209 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Troubadour</title>
-        <link rel="stylesheet" href="node_modules/bulma/css/bulma.min.css">
-        <link rel="stylesheet" type="text/css" v-bind:href="state.cssFile" id="stylesheet">
-        <link rel="stylesheet" type="text/css" href="node_modules/animate.css/animate.min.css">
-        <link rel="stylesheet" type="text/css" href="index.css">
-        <style>
-            body {
-                user-select: none;
-            }
-            .fullwidthforrealz {
-                width: 100%;
-            }
-        </style>
-        <script src="node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
-        <script src="node_modules/bulma-toast/dist/bulma-toast.min.js"></script>
-    </head>
-    <body onbeforeunload="dbfuncs.save()"  style="border-radius: 20px">
-        <header id="titlebar" class="drag-enable section">
-            <div class="columns">
-                <div class="column"></div>
-                <div class="column is-centered subtitle has-text-centered">Troubadour</div>
-                <div class="column has-text-right is-vcentered">
-                    <span class="icon is-medium drag-disable hover-opacity" onclick="document.location.reload()">
-                        <i class="fas fa-redo"></i>
-                    </span>
-                    <span class="icon is-medium drag-disable hover-opacity" onclick="nw.Window.get().minimize()">
-                        <i class="fas fa-window-minimize"></i>
-                    </span>
-                    <span class="icon is-medium drag-disable hover-opacity"  onclick="(nw.Window.get().cWindow.state === 'maximized')?nw.Window.get().unmaximize():nw.Window.get().maximize()">
-                        <i class="fas fa-window-maximize"></i>
-                    </span>
-                    <span class="icon is-medium drag-disable hover-opacity hover-red" onclick="dbfuncs.save(); nw.Window.get().close()">
-                        <i class="fas fa-window-close"></i>
-                    </span>
-                </div>
+
+<head>
+    <title>Troubadour</title>
+    <link rel="stylesheet" href="node_modules/bulma/css/bulma.min.css">
+    <link rel="stylesheet" type="text/css" v-bind:href="state.cssFile" id="stylesheet">
+    <link rel="stylesheet" type="text/css" href="node_modules/animate.css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <style>
+        body {
+            user-select: none;
+        }
+
+        .fullwidthforrealz {
+            width: 100%;
+        }
+    </style>
+    <script src="node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
+    <script src="node_modules/bulma-toast/dist/bulma-toast.min.js"></script>
+</head>
+
+<body onbeforeunload="dbfuncs.save()" style="border-radius: 20px">
+    <header id="titlebar" class="drag-enable section">
+        <div class="columns">
+            <div class="column"></div>
+            <div class="column is-centered subtitle has-text-centered">Troubadour</div>
+            <div class="column has-text-right is-vcentered">
+                <span class="icon is-medium drag-disable hover-opacity" onclick="document.location.reload()">
+                    <i class="fas fa-redo"></i>
+                </span>
+                <span class="icon is-medium drag-disable hover-opacity" onclick="nw.Window.get().minimize()">
+                    <i class="fas fa-window-minimize"></i>
+                </span>
+                <span class="icon is-medium drag-disable hover-opacity"
+                    onclick="(nw.Window.get().cWindow.state === 'maximized')?nw.Window.get().unmaximize():nw.Window.get().maximize()">
+                    <i class="fas fa-window-maximize"></i>
+                </span>
+                <span class="icon is-medium drag-disable hover-opacity hover-red"
+                    onclick="dbfuncs.save(); nw.Window.get().close()">
+                    <i class="fas fa-window-close"></i>
+                </span>
             </div>
-        </header>
-        <br>
-        <section id="app-content" class="section" style="overflow-y: auto;">
-            <div class="container">
-                <div class="columns">
-                    <div class="column is-one-fifth">
-                        <div class="panel" id="menu">
-                            <div class="panel-heading">
-                                <span>
-                                    Troubadour <span class="tag is-info animated jackInTheBox" style="animation-duration: 1s; animation-delay: 1s;">Beta</span>
+        </div>
+    </header>
+    <br>
+    <section id="app-content" class="section" style="overflow-y: auto;">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-one-fifth">
+                    <div class="panel" id="menu">
+                        <div class="panel-heading">
+                            <span>
+                                Troubadour <span class="tag is-info animated jackInTheBox"
+                                    style="animation-duration: 1s; animation-delay: 1s;">Beta</span>
+                            </span>
+                        </div>
+                        <aside class="menu">
+                            <div class="panel-block" v-if="state.UIState == UIStates.PLAYLISTS">
+                                <span class="fullwidthforrealz">
+                                    <p class="menu-label">Series</p>
+                                    <ul class="menu-list">
+                                        <li><a onclick="gotoLastListen()">Last listen</a></li>
+                                        <li><a onclick="addNewSeries()">Add a new series</a></li>
+                                        <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit series list</a></li>
+                                    </ul>
                                 </span>
                             </div>
-                            <aside class="menu">
-                                <div class="panel-block" v-if="state.UIState == UIStates.PLAYLISTS">
-                                    <span class="fullwidthforrealz">
-                                        <p class="menu-label">Series</p>
-                                        <ul class="menu-list">
-                                            <li><a onclick="gotoLastListen()">Last listen</a></li>
-                                            <li><a onclick="addNewSeries()">Add a new series</a></li>
-                                            <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit series list</a></li>
-                                        </ul>
-                                    </span>
-                                </div>
-                                <div class="panel-block" v-if="state.UIState == UIStates.EPISODES">
-                                    <span class="fullwidthforrealz">
-                                        <p class="menu-label">Episodes</p>
-                                        <ul class="menu-list">
-                                            <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit episode list</a></li>
-                                            <li><a onclick="addNewEpisode()">Add a new episode</a></li>
-                                            <li><a onclick="resetSeriesProgression()">Reset progression</a></li>
-                                            <li><a onclick="importFromPlaylistFile()">Import playlist from file</a></li>
-                                            <li><a onclick="exportToPlaylistFile()">Export playlist to file</a></li>
-                                        </ul>
-                                    </span>
-                                </div>
-                                <div class="panel-block">
-                                    <span class="fullwidthforrealz">
-                                        <p class="menu-label">General</p>
-                                        <ul class="menu-list">
-                                            <li><a v-if="state.UIState != UIStates.LISTENTOEPISODE" onclick="ApplicationState.SettingsOn = !ApplicationState.SettingsOn">Settings</a></li>
-                                        </ul>
-                                    </span>
-                                </div>
-                                <div class="panel-block">
-                                    <span class="fullwidthforrealz">
-                                        <p class="menu-label">Beta</p>
-                                        <ul class="menu-list">
-                                            <li><a onclick="dbfuncs.save()">Save database</a></li>
-                                            <li><a onclick="dbfuncs.load()">Load database</a></li>
-                                        </ul>
-                                    </span>
-                                </div>
-                            </aside>
-                        </div>
+                            <div class="panel-block" v-if="state.UIState == UIStates.EPISODES">
+                                <span class="fullwidthforrealz">
+                                    <p class="menu-label">Episodes</p>
+                                    <ul class="menu-list">
+                                        <li><a onclick="ApplicationState.isEditing = !ApplicationState.isEditing">Edit episode list</a></li>
+                                        <li><a onclick="addNewEpisodeFromDisk()">Add a new episode from disk</a></li>
+                                        <li><a onclick="addNewEpisodeFromURL()">Add a new episode from a URL</a></li>
+                                        <li><a onclick="resetSeriesProgression()">Reset progression</a></li>
+                                        <li><a onclick="importFromPlaylistFile()">Import playlist from file</a></li>
+                                        <li><a onclick="exportToPlaylistFile()">Export playlist to file</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="panel-block">
+                                <span class="fullwidthforrealz">
+                                    <p class="menu-label">General</p>
+                                    <ul class="menu-list">
+                                        <li><a v-if="state.UIState != UIStates.LISTENTOEPISODE"
+                                                onclick="ApplicationState.SettingsOn = !ApplicationState.SettingsOn">Settings</a>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="panel-block">
+                                <span class="fullwidthforrealz">
+                                    <p class="menu-label">Beta</p>
+                                    <ul class="menu-list">
+                                        <li><a onclick="dbfuncs.save()">Save database</a></li>
+                                        <li><a onclick="dbfuncs.load()">Load database</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </aside>
                     </div>
-                    <div class="column">
-                    </div>
-                    <div class="column is-three-quarters">
-                        <div id="settings" v-if="state.SettingsOn">
-                            <h2 class="title">Settings</h2>
-                            <button class="button is-info" onclick="ApplicationState.SettingsOn = false"><span class="icon"><i class="fas fa-chevron-left"></i></span><span>Back</span></button><br><br>
-                            <form class="form">
-                                <label for="auto-play">Auto-play: </label>
-                                <input class="checkbox" type="checkbox" id="auto-play" v-model="state.shouldAutoPlay">
-                                <br>
-                                <label for="themes">Theme: </label>
-                                <select class="select" v-model="state.cssFile">
-                                    <option v-for="theme in cssFiles" v-bind:value="theme">{{theme}}</option>
-                                </select>
-                            </form>
+                </div>
+                <div class="column">
+                </div>
+                <div class="column is-three-quarters">
+                    <div id="settings" v-if="state.SettingsOn">
+                        <h2 class="title">Settings</h2>
+                        <button class="button is-info" onclick="ApplicationState.SettingsOn = false"><span
+                                class="icon"><i
+                                    class="fas fa-chevron-left"></i></span><span>Back</span></button><br><br>
+                        <form class="form">
+                            <label for="auto-play">Auto-play: </label>
+                            <input class="checkbox" type="checkbox" id="auto-play" v-model="state.shouldAutoPlay">
                             <br>
-                        </div>
-                        <div id="playlistList" v-if="state.UIState == UIStates.PLAYLISTS && !state.SettingsOn">
-                            <h2 class="title">Series</h2>
-                            <table class="table is-hoverable is-striped is-fullwidth">
-                                <tr class="thead">
-                                    <span>
-                                        <td>Name</td>
-                                        <td>Episodes</td>
+                            <label for="themes">Theme: </label>
+                            <select class="select" v-model="state.cssFile">
+                                <option v-for="theme in cssFiles" v-bind:value="theme">{{theme}}</option>
+                            </select>
+                        </form>
+                        <br>
+                    </div>
+                    <div id="playlistList" v-if="state.UIState == UIStates.PLAYLISTS && !state.SettingsOn">
+                        <h2 class="title">Series</h2>
+                        <table class="table is-hoverable is-striped is-fullwidth">
+                            <tr class="thead">
+                                <span>
+                                    <td>Name</td>
+                                    <td>Episodes</td>
+                                </span>
+                            </tr>
+                            <tr v-for="(playlist, index) in state.playlists">
+                                <td v-on:click="onPlaylistClick($event, index)">
+                                    {{playlist.name}}
+                                </td>
+                                <td>
+                                    {{playlist.audioFiles.length}}
+
+                                    <span style="text-align: right" class="icon has-text-success animated jackInTheBox"
+                                        style="animation-duration: 1s; animation-delay: 1s;"
+                                        v-if="isPlaylistCompleted(index)">
+                                        <i class="fas fa-check"></i>
                                     </span>
-                                </tr>
-                                <tr v-for="(playlist, index) in state.playlists">
-                                    <td v-on:click="onPlaylistClick($event, index)">
-                                        {{playlist.name}}
-                                    </td>
-                                    <td>
-                                        {{playlist.audioFiles.length}}
-                                        
-                                        <span style="text-align: right" class="icon has-text-success animated jackInTheBox" style="animation-duration: 1s; animation-delay: 1s;" v-if="isPlaylistCompleted(index)">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                    </td>
-                                    <td v-if="state.isEditing">
-                                        <a class="delete" v-on:click="deletePlaylist($event, index)"></a>
-                                        <a class="icon" v-on:click="editPlaylistName($event, index)"><i class="fas fa-edit"></i></a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div id="episodeList" v-if="state.UIState == UIStates.EPISODES && !state.SettingsOn">
-                            <h2 class="title">Episodes - {{state.playlists[state.currentPlaylistId].name}}</h2>
-                            <back-button></back-button><br><br>
-                            <table class="table is-hoverable is-striped is-fullwidth">
-                                <tr v-for="(episode, index) in state.episodes">
-                                    <td v-on:click="onPlaylistClick($event, index)">
-                                        {{state.episodes[index].name}}
-                                    </td>
-                                    <td>
-                                        {{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}
-                                    </td>
-                                    <td>
-                                        <span class="icon has-text-success animated jackInTheBox" style="animation-duration: 1s; animation-delay: 0.5s;" v-if="state.episodes[index].isCompleted">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                        <span class="icon has-text-info" v-if="!state.episodes[index].isCompleted">
-                                            <i class="fas fa-dragon"></i>
-                                        </span>
-                                    </td>
-                                    <td v-if="state.isEditing">
-                                        <a class="delete" v-on:click="deleteEpisode($event, index)"></a>
-                                        <a class="icon" v-on:click="editEpisodeName($event, index)"><i class="fas fa-edit"></i></a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div id="listen" v-if="state.UIState == UIStates.LISTENTOEPISODE && state.currentEpisode != null">
-                            <h2 class="title">
-                                Playing: {{state.playlists[state.currentPlaylistId].name}} - {{state.currentEpisode.name}}
-                            </h2>
-                            <back-button></back-button><br><br>
-                            <audio controls v-bind:src="state.currentEpisode.path"></audio>
-                        </div>
+                                </td>
+                                <td v-if="state.isEditing">
+                                    <a class="delete" v-on:click="deletePlaylist($event, index)"></a>
+                                    <a class="icon" v-on:click="editPlaylistName($event, index)"><i
+                                            class="fas fa-edit"></i></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="episodeList" v-if="state.UIState == UIStates.EPISODES && !state.SettingsOn">
+                        <h2 class="title">Episodes - {{state.playlists[state.currentPlaylistId].name}}</h2>
+                        <back-button></back-button><br><br>
+                        <table class="table is-hoverable is-striped is-fullwidth">
+                            <tr v-for="(episode, index) in state.episodes">
+                                <td v-on:click="onPlaylistClick($event, index)">
+                                    {{state.episodes[index].name}}
+                                </td>
+                                <td>
+                                    {{TimeUtils.getMinutes(episode.seconds)}}:{{TimeUtils.getSeconds(episode.seconds)}}
+                                </td>
+                                <td>
+                                    <span class="icon has-text-success animated jackInTheBox"
+                                        style="animation-duration: 1s; animation-delay: 0.5s;"
+                                        v-if="state.episodes[index].isCompleted">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="icon has-text-info" v-if="!state.episodes[index].isCompleted">
+                                        <i class="fas fa-dragon"></i>
+                                    </span>
+                                </td>
+                                <td v-if="state.isEditing">
+                                    <a class="delete" v-on:click="deleteEpisode($event, index)"></a>
+                                    <a class="icon" v-on:click="editEpisodeName($event, index)"><i
+                                            class="fas fa-edit"></i></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="listen" v-if="state.UIState == UIStates.LISTENTOEPISODE && state.currentEpisode != null">
+                        <h2 class="title">
+                            Playing: {{state.playlists[state.currentPlaylistId].name}} - {{state.currentEpisode.name}}
+                        </h2>
+                        <back-button></back-button><br><br>
+                        <audio controls v-bind:src="state.currentEpisode.path"></audio>
                     </div>
                 </div>
             </div>
-        </section>
-        <script src="scripts/timeutils.js"></script>
-        <script src="node_modules/vue/dist/vue.min.js"></script>
-        <script>
-            Vue.component('back-button', {
-                template: '<button class="button is-info" onclick="goBack()"><span class="icon"><i class="fas fa-chevron-left"></i></span><span>Back</span></button>'
-            });
-        </script>
-        <script src="index.js"></script>
-        <!--<script src="node_modules/nw-dev/lib/dev.js"></script>-->
-        <script>
+        </div>
+    </section>
+    <script src="scripts/timeutils.js"></script>
+    <script src="node_modules/vue/dist/vue.min.js"></script>
+    <script>
+        Vue.component('back-button', {
+            template: '<button class="button is-info" onclick="goBack()"><span class="icon"><i class="fas fa-chevron-left"></i></span><span>Back</span></button>'
+        });
+    </script>
+    <script src="index.js"></script>
+    <!--<script src="node_modules/nw-dev/lib/dev.js"></script>-->
+    <script>
 
-        </script>
-        <input style="display:none;" id="fileOpenDialog" type="file"/>
-        <input style="display:none;" id="fileSaveDialog" type="file" nwsaveas/>
-    </body>
+    </script>
+    <input style="display:none;" id="fileOpenDialog" type="file" />
+    <input style="display:none;" id="fileSaveDialog" type="file" nwsaveas />
+</body>
+
 </html>
