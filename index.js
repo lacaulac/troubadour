@@ -180,7 +180,8 @@ function addNewSeries() {
     bulmaToast.toast({
         message: `Added ${name} to the series list`,
         type: "is-success",
-        animate: defaultToastAnimation
+        animate: defaultToastAnimation,
+        position: "bottom-right"
     });
 }
 
@@ -201,7 +202,8 @@ function addNewEpisode() {
     bulmaToast.toast({
         message: `Added ${name} to ${ApplicationState.playlists[ApplicationState.currentPlaylistId].name}`,
         type: "is-success",
-        animate: defaultToastAnimation
+        animate: defaultToastAnimation,
+        position: "bottom-right"
     });
 }
 
@@ -224,7 +226,8 @@ function onAudioEnd() {
                 bulmaToast.toast({
                     message: "Playing next episode",
                     type: "is-info",
-                    animate: defaultToastAnimation
+                    animate: defaultToastAnimation,
+                    position: "bottom-right"
                 });
             }
         })
@@ -272,7 +275,8 @@ function resetSeriesProgression() {
         bulmaToast.toast({
             message: "Canceled action",
             type: "is-danger",
-            animate: defaultToastAnimation
+            animate: defaultToastAnimation,
+            position: "bottom-right"
         });
         return;
     }
@@ -287,7 +291,8 @@ function resetSeriesProgression() {
     bulmaToast.toast({
         message: "Deleted progression!",
         type: "is-success",
-        animate: defaultToastAnimation
+        animate: defaultToastAnimation,
+        position: "bottom-right"
     });
 }
 
@@ -298,7 +303,8 @@ function gotoLastListen() {
     bulmaToast.toast({
         message: "Resumed listening!",
         type: "is-success",
-        animate: defaultToastAnimation
+        animate: defaultToastAnimation,
+        position: "bottom-right"
     });
 }
 
@@ -332,7 +338,8 @@ function importFromPlaylistFile() {
         bulmaToast.toast({
             message: `Successfully imported ${amount} episodes`,
             type: "is-success",
-            animate: defaultToastAnimation
+            animate: defaultToastAnimation,
+            position: "bottom-right"
         });
         document.querySelector("#fileOpenDialog").onchange = null;
     }
@@ -352,7 +359,8 @@ function exportToPlaylistFile() {
         bulmaToast.toast({
             message: `Successfully exported all episodes to ${path}`,
             type: "is-success",
-            animate: defaultToastAnimation
+            animate: defaultToastAnimation,
+            position: "bottom-right"
         });
         document.querySelector("#fileSaveDialog").onchange = null;
     }
