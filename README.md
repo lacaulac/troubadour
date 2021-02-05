@@ -17,11 +17,21 @@ Nevertheless, feel free to submit an issue if you were to encounter a bug, speci
 - Supports multiple themes (check out the settings menu!)
 
 ## How to use
-There's no binary release available as of yet, so starting it from the source is required.
+### Binaries
+Binaries for the beta version are available [here](https://github.com/lacaulac/troubadour/releases).
+Future updates shouldn't break compatibility, but mind that it could happen. In that case, a notice would be present in the release notes.
+
+### From source
 You need to have NW.js installed and in your path.
 
 - `npm install` or `yarn`
 - `nw .`
+
+If you want to package your own version, you can use the following command:
+
+`npm run dist`
+
+You can make changes to `package.json` in order to customise the packaging options.
 
 ## What it's made of
 
