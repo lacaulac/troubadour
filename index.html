@@ -32,7 +32,7 @@
                     <span class="icon is-medium drag-disable hover-opacity"  onclick="(nw.Window.get().cWindow.state === 'maximized')?nw.Window.get().unmaximize():nw.Window.get().maximize()">
                         <i class="fas fa-window-maximize"></i>
                     </span>
-                    <span class="icon is-medium drag-disable hover-opacity hover-red" onclick="nw.Window.get().close()">
+                    <span class="icon is-medium drag-disable hover-opacity hover-red" onclick="dbfuncs.save(); nw.Window.get().close()">
                         <i class="fas fa-window-close"></i>
                     </span>
                 </div>
