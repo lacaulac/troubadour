@@ -350,12 +350,17 @@ function gotoLastListen() {
     });
 }
 
+function isPathAbsoluteOrURL(path) {
+    let regex = /^(http.*)|((.:)|\/)(.*(\/|\\).*)$/gm;
+    return path.match(regex) !== null;
+}
+
 function importFromPlaylistFile() {
     document.querySelector("#fileOpenDialog").click();
     document.querySelector("#fileOpenDialog").onchange = () => {
-        let path = document.querySelector("#fileOpenDialog").files[0].path;
+        let plpath = document.querySelector("#fileOpenDialog").files[0].path;
         let i = 0, amount=0;
-        let content = removeWindowsLineReturn(fs.readFileSync(path, "utf-8")).split('\n');
+        let content = removeWindowsLineReturn(fs.readFileSync(plpath, "utf-8")).split('\n');
         let isM3U = content[0] == "#EXTM3U"; //Is the imported file a M3U8 file?
         let tmpName = "";
         content.forEach(line => {
@@ -367,6 +372,12 @@ function importFromPlaylistFile() {
                 tmpName = arr.join(",");
             }
             else if(line != "" && line.indexOf("#") == -1) {
+                //If the path isn't absolute, let's make it so
+                if(!isPathAbsoluteOrURL(line)) {
+                    let tmpPath = plpath.split(path.sep);
+                    tmpPath[tmpPath.length - 1] = line;
+                    line = tmpPath.join(path.sep);
+                }
                 ApplicationState.episodes.push({
                     path: line,
                     seconds: 0,
